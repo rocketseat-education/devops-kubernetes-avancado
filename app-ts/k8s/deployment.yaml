@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: app-ts
+
+spec:
+  replicas: 6
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 10%
+  selector:
+    matchLabels:
+      api: app-ts
+  template:
+    metadata:
+      labels:
+        api: app-ts
+    spec:
+      containers:
+        - name: app-ts
+          image: danielrodriguess/app-ts:v9
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: app-ts
+            - secretRef:
+                name: app-ts-secrets
+          # env:
+          #   - name: APP
+          #     valuefrom:
+          #       configmapkeyref:
+          #         name: app-ts
+          #         key: app-name
+          #   - name: API_KEY
+          #     valuefrom:
+          #       secretkeyref:
+          #         name: app-ts-secrets
+          #         key: api-key
+          ports:
+            - containerPort: 3000
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 3000
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 1
+            periodSeconds: 15
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            failureThreshold: 2
+            successThreshold: 3
+            periodSeconds: 10
+            initialDelaySeconds: 5
+          resources:
+            requests:
+              cpu: 400m
+              memory: 128Mi
+            limits:
+              cpu: 700m
+              memory: 192Mi
+          # volumeMounts:
+          #   - name: app-ts-data
+          #     mountPath: /usr/src/app/uploads
+      # volumes:
+      #   - name: app-ts-data
+      #     persistentVolumeClaim:
+      #       claimName: first-pvc
