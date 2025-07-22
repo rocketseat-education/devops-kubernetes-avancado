@@ -5,7 +5,7 @@ metadata:
   name: app-ts-svc
 
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     api: app-ts
   ports:
