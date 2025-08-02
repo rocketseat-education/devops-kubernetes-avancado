@@ -19,8 +19,8 @@ metadata:
   namespace: default
 
 subjects:
-  - kind: User
-    name: rocketseat-user
+  - kind: Group
+    name: group-rocketseat
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: Role
@@ -47,8 +47,8 @@ metadata:
   name: read-ns-binding
 
 subjects:
-  - kind: User
-    name: rocketseat-user
+  - kind: Group
+    name: group-rocketseat
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRoleRole
