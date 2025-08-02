@@ -26,3 +26,31 @@ roleRef:
   kind: Role
   name: read-pod
   apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+
+metadata:
+  name: read-ns
+
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+
+metadata:
+  name: read-ns-binding
+
+subjects:
+  - kind: User
+    name: rocketseat-user
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRoleRole
+  name: read-ns
+  apiGroup: rbac.authorization.k8s.io
