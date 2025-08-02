@@ -1,0 +1,10 @@
+cluster_name       = "rocketseat-cluster"
+region             = "us-east-2"
+vpc_name           = "rocketseat"
+vpc_cidr           = "10.0.0.0/16"
+availability_zones = ["us-east-2a", "us-east-2b", "us-east-2c"]
+instance_types     = ["t3.medium"]
+desired_capacity   = 1
+max_capacity       = 1
+min_capacity       = 1
+kubernetes_version = "1.33"
