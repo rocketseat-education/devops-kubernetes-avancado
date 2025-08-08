@@ -19,7 +19,7 @@ spec:
       labels:
         api: app-ts
     spec:
-      serviceAccountName: sa-default
+      #serviceAccountName: sa-default
       containers:
         - name: app-ts
           image: danielrodriguess/app-ts:v10
