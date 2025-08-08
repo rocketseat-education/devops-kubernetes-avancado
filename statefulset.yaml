@@ -18,10 +18,10 @@ spec:
         - name: nginx
           image: nginx:latest
           ports:
-          - containerPort: 80
+            - containerPort: 80
           volumeMounts:
-          - name: nginx-volume
-            mountPath: /usr/share/nginx/html
+            - name: nginx-volume
+              mountPath: /usr/share/nginx/html
     volumeClaimTemplates:
       - metadata:
           name: nginx-volume
