@@ -19,3 +19,15 @@ spec:
           image: nginx:latest
           ports:
           - containerPort: 80
+          volumeMounts:
+          - name: nginx-volume
+            mountPath: /usr/share/nginx/html
+    volumeClaimTemplates:
+      - metadata:
+          name: nginx-volume
+        spec:
+          storageClassName: gp2
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 512Mi

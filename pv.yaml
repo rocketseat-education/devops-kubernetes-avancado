@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolume
+
+metadata:
+  name: eks-pv
+  labels:
+    name: eks-pv
+
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: gp2
+  hostPath:
+    path: /tmp/data
