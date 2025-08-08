@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: StatefulSet
+
+metadata:
+  name: postgres
+
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+    replica: 1
+    template:
+      metadata:
+        labels:
+          app: postgres
+      spec:
+        containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            value: ++rocketseat++
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+          - name: pg-data
+            mountPath: /var/lib/postgresql/data
+    volumeClaimTemplates:
+      - metadata:
+          name: pg-data
+        spec:
+          storageClassName: gp2
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
