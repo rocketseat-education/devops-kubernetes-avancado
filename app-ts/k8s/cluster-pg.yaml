@@ -26,3 +26,17 @@ spec:
     storageClass: standard
     size: 1Gi
   enableSuperuserAccess: true
+
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+
+metadata:
+  name: pg-cluster-backup
+
+spec:
+  schedule: "0 0 5 * * *"
+  backupOwnerReference: self
+  cluster:
+    name: pg-cluster
+  method: barmanObjectStore
