@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: DaemonSet
+
+metadata:
+  name: prom-exporter
+
+spec:
+  selector:
+    matchLabels:
+      name: prom-exporter
+  template:
+    metadata:
+      labels:
+        name: prom-exporter
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+        - name: prom-exporter
+          image: prom/node-exporter:v1.9.1
