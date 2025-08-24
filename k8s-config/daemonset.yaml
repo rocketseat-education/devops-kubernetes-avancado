@@ -18,3 +18,29 @@ spec:
       containers:
         - name: prom-exporter
           image: prom/node-exporter:v1.9.1
+          args:
+            - '--path.rootfs=/rootfs'
+            - '--path.procfs=/host/proc'
+            - '--path.sysfs=/host/sys'
+          ports:
+            - containerPort: 9100
+          volumeMounts:
+          - name: root
+            mountPath: /rootfs
+            readOnly: true
+          - name: proc
+            mountPath: /host/proc
+            readOnly: true
+          - name: sys
+            mountPath: /host/sys
+            readOnly: true
+      volumes:
+        - name: root
+          hostPath:
+            path: /
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys
