@@ -22,7 +22,7 @@ spec:
       #serviceAccountName: sa-default
       containers:
         - name: app-ts
-          image: danielrodriguess/app-ts:v10
+          image: danielrodriguess/app-ts:TAG_IMAGE
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
