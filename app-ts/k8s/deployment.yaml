@@ -3,9 +3,10 @@ kind: Deployment
 
 metadata:
   name: app-ts
+  namespace: app
 
 spec:
-  replicas: 3
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
