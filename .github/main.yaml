@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
   build:
     name: 'Build, Push and Deployment'
@@ -46,3 +50,9 @@ jobs:
           docker push ${{ vars.IMAGE_BASE_NAME }}:${{ steps.generate_tag.outputs.sha }}
           docker tag ${{ vars.IMAGE_BASE_NAME }}:${{ steps.generate_tag.outputs.sha }} ${{ vars.IMAGE_BASE_NAME }}:latest
           docker push ${{ vars.IMAGE_BASE_NAME }}:latest
+
+      - name: Configure cloud provider credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
