@@ -3,5 +3,6 @@
 
   metadata:
     name: app-ts
+    namespace: app
   data:
     APP: rocketseat-app
