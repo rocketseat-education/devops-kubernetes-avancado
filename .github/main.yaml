@@ -22,3 +22,15 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+
+      - name: Run tests
+        run: yarn run test
+
+      - name: Generate tag
+        id: generate_tag
+        run: |
+          SHA=$(echo $GITHUB_SHA | head -c7)
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+
+      - name: Build container image
+        run: docker build -t danielrodriguess/app-ts:${{ steps.generate_tag.outputs.sha }} .
