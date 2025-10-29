@@ -7,6 +7,8 @@ metadata:
     k8s-app: cluster-autoscaler
   name: cluster-autoscaler
   namespace: kube-system
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::403429280851:role/role-cluster-autoscaler-config
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
