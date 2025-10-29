@@ -6,7 +6,7 @@ metadata:
   namespace: app
 
 spec:
-  replicas: 2
+  replicas: 40
   strategy:
     type: RollingUpdate
     rollingUpdate:
