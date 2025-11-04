@@ -6,7 +6,7 @@ metadata:
   namespace: app
 
 spec:
-  replicas: 2
+  replicas: 10
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,6 +20,21 @@ spec:
       labels:
         api: app-ts
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node.kubernetes.io/instance-type
+                    operator: NotIn
+                    values: [ "t3.medium"]
+      topologySpreadConstraints:
+        - labalSelector:
+            matchLabels:
+              api: app-ts
+          maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
       #serviceAccountName: sa-default
       containers:
         - name: app-ts
