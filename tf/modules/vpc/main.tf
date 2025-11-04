@@ -51,8 +51,9 @@ resource "aws_subnet" "private_subnets" {
   availability_zone = var.availability_zones[count.index]
 
   tags = {
-    Name = "private-subnet-${count.index + 1}"
-    IAC  = "True"
+    Name                     = "private-subnet-${count.index + 1}"
+    IAC                      = "True"
+    "karpenter.sh/discovery" = var.cluster_name
   }
 }
 
