@@ -38,3 +38,18 @@ spec:
         - key: node.kubernetes.io/instance-type
           operator: In
           values: ["t3.medium", "t3.large"]
+        - key: topology.kubernetes.io/zone
+          operator: In
+          values: ["us-east-2a", "us-east-2c"]
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: node-class-default
+      expireAfter: 720h
+  limits:
+    cpu: 500
+    memory: 100Gi
+  disruption:
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 30s
+    
