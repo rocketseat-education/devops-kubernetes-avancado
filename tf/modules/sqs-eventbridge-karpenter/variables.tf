@@ -1,8 +1,7 @@
-variable "queue_name" {
-  description = "Nome da fila SQS"
+variable "cluster_name" {
+  description = "Nome do Cluster"
   type        = string
 }
-
 variable "message_retention_seconds" {
   description = "Tempo de retenção das mensagens na fila"
   type        = number

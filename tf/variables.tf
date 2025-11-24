@@ -48,11 +48,6 @@ variable "kubernetes_version" {
   default = "1.33"
 }
 
-variable "queue_name" {
-  description = "Nome da fila SQS"
-  type        = string
-}
-
 variable "message_retention_seconds" {
   description = "Tempo de retenção das mensagens na fila"
   type        = number
