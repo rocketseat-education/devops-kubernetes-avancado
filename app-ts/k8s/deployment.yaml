@@ -4,6 +4,8 @@ kind: Deployment
 metadata:
   name: app-ts
   namespace: app
+  labels:
+    example: "true"
 
 spec:
   replicas: 5
