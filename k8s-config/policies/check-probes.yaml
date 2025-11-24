@@ -1,0 +1,35 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+
+metadata:
+  name: check-probes
+
+spec:
+  validationFailureAction: Enforce
+  rules:
+    - name: check-all-probes
+      match:
+        resources:
+          kinds:
+            - Deployment
+            - DaemonSet
+            - StatefulSet
+      validate:
+        message: "All containers must have probes defined."
+        pattern:
+          spec:
+            template:
+              spec:
+                containers:
+                  - readinessProbe:
+                      periodSeconds: ">5"
+                      httpGet:
+                        path: "?*"
+                    livenessProbe:
+                      periodSeconds: ">3"
+                      httpGet:
+                        path: "?*"
+                    startupProbe:
+                      periodSeconds: ">5"
+                      httpGet:
+                        path: "?*"
