@@ -1,0 +1,23 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+
+metadata:
+  name: add-default-labels
+
+spec:
+  rules:
+    - name: add-default-labels
+      match:
+        resources:
+          kinds:
+            - Pod
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              team: "rocketseat"
+      preconditions:
+        all:
+          - key: "{{ request.object.metadata.labels.team || '' }}"
+            operator: Equals
+            value: ""
