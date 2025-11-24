@@ -20,6 +20,11 @@ spec:
       labels:
         api: app-ts
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -49,6 +54,11 @@ spec:
         - name: app-ts
           image: danielrodriguess/app-ts:TAG_IMAGE
           imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           envFrom:
             - configMapRef:
                 name: app-ts
