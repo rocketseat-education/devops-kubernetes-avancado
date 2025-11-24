@@ -1,0 +1,22 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+
+metadata:
+  name: sync-cm
+
+spec:
+  rules:
+    - name: sync-cm
+      match:
+        resources:
+          kinds:
+            - Namespace
+      generate:
+        apiVersion: v1
+        kind: ConfigMap
+        name: copy-app-ts
+        namespace: "{{request.object.metadata.name}}"
+        synchronize: true
+        clone:
+          namespace: app
+          name: app-ts

@@ -53,7 +53,7 @@ spec:
       #serviceAccountName: sa-default
       containers:
         - name: app-ts
-          image: danielrodriguess/app-ts:TAG_IMAGE
+          image: danielrodriguess/app-ts:4e033dd
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
