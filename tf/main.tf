@@ -50,3 +50,9 @@ module "eks" {
   min_capacity              = var.min_capacity
   kubernetes_version        = var.kubernetes_version
 }
+
+module "sqs-eventbridge-karpenter" {
+  source = "./modules/sqs-eventbridge-karpenter"
+
+  queue_name = var.queue_name
+}

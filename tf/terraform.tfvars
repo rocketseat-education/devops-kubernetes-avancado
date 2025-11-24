@@ -8,3 +8,4 @@ desired_capacity   = 2
 max_capacity       = 2
 min_capacity       = 2
 kubernetes_version = "1.33"
+queue_name         = "rocketseat-cluster-karpenter-interruption"
