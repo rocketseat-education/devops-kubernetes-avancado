@@ -23,7 +23,7 @@ spec:
     spec:
       securityContext:
         runAsUser: 1000
-        runAsNonRoot: true
+        #runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
       affinity:
