@@ -54,5 +54,5 @@ module "eks" {
 module "sqs-eventbridge-karpenter" {
   source = "./modules/sqs-eventbridge-karpenter"
 
-  queue_name = var.queue_name
+  cluster_name = var.cluster_name
 }
