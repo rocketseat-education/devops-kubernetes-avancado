@@ -5,7 +5,7 @@ metadata:
   name: check-probes
 
 spec:
-  validationFailureAction: Enforce
+  #validationFailureAction: Enforce
   rules:
     - name: check-all-probes
       match:
@@ -15,6 +15,7 @@ spec:
             - DaemonSet
             - StatefulSet
       validate:
+        failureAction: Enforce
         message: "All containers must have probes defined."
         pattern:
           spec:
@@ -33,3 +34,17 @@ spec:
                       periodSeconds: ">5"
                       httpGet:
                         path: "?*"
+    - name: check-tags
+      match:
+        resources:
+          kinds:
+            - Deployment
+            - DaemonSet
+            - StatefulSet
+      validate:
+        failureAction: Audit
+        message: "All resources must have tags defined."
+        pattern:
+          metadata:
+            labels:
+              examples: "?*"
