@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: app-in-multi-cluster
+  namespace: argocd
+
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: prod
+            url: https://kubernetes.default.svc
+          - cluster: staging
+            url: https://192.168.97.10:6443
+  template:
+    metadata:
+      name: 'app-ts-{{cluster}}'
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:rocketseat-education/devops-kubernetes-avancado.git
+        targetRevision: HEAD
+        path: 'app-ts/k8s'
+      destination:
+        server: '{{url}}'
+        namespace: app
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
