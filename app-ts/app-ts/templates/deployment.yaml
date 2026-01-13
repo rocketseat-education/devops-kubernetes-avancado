@@ -4,10 +4,6 @@ metadata:
   name: {{ include "app-ts.fullname" . }}
   labels:
     {{- include "app-ts.labels" . | nindent 4 }}
-  {{- if .Values.restartPod }}
-  annotations:
-    checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-  {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -17,10 +13,10 @@ spec:
       {{- include "app-ts.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- if .Values.restartPodWithConfig }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+          checksum/config: {{ toYaml .Values.appConfigEnv | sha256sum }}
+        {{- end }}
       labels:
         {{- include "app-ts.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
@@ -42,6 +38,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Chart.Name }}-config
+            - secretRef:
+                name: {{ .Chart.Name }}-secret
           ports:
             - name: http
               containerPort: {{ .Values.image.containerPort }}
