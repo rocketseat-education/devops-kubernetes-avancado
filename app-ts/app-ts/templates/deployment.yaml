@@ -4,6 +4,10 @@ metadata:
   name: {{ include "app-ts.fullname" . }}
   labels:
     {{- include "app-ts.labels" . | nindent 4 }}
+  {{- if .Values.restartPod }}
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+  {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -35,6 +39,9 @@ spec:
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}-config
           ports:
             - name: http
               containerPort: {{ .Values.image.containerPort }}

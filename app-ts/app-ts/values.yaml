@@ -1,5 +1,14 @@
 replicaCount: 3
 
+namespace: app
+
+restartPod: true
+
+appConfigEnv:
+  APP: rocketseat-app
+  ENV: production
+  DB_URL: postgresql://xpto
+
 image:
   repository: danielrodriguess/app-ts
   pullPolicy: IfNotPresent
