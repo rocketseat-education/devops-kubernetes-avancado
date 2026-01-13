@@ -51,18 +51,31 @@ jobs:
           docker tag ${{ vars.IMAGE_BASE_NAME }}:${{ steps.generate_tag.outputs.sha }} ${{ vars.IMAGE_BASE_NAME }}:latest
           docker push ${{ vars.IMAGE_BASE_NAME }}:latest
 
-      - name: Configure cloud provider credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Update image tag
+        uses: fjogeleit/yaml-update-action@main
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-          aws-region: ${{ vars.AWS_REGION }}
+          # branch: 'deployment/${{ steps.generate_tag.outputs.sha }}'
+          branch: 'main'
+          valueFile: 'k8s/deployment.yaml'
+          propertyPath: 'spec.template.spec.containers[0].image'
+          value: 'danielrodriguess/app-ts:${{ steps.generate_tag.outputs.sha }}'
+          commitChange: true
+          message: 'new: update image tag'
+          # createPR: true
+          # targetBranch: main
 
-      - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ${{ vars.CLUSTER_NAME }}
+      # - name: Configure cloud provider credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+      #     aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Deploy to K8S
-        run: |
-          sed -i "s|TAG_IMAGE|${{ steps.generate_tag.outputs.sha }}|g" k8s/deployment.yaml
-          kubectl apply -f k8s/deployment.yaml -n app
-          kubectl rollout status deployment/app-ts -n app
+      # - name: Update kubeconfig
+      #   run: |
+      #     aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ${{ vars.CLUSTER_NAME }}
+
+      # - name: Deploy to K8S
+      #   run: |
+      #     sed -i "s|TAG_IMAGE|${{ steps.generate_tag.outputs.sha }}|g" k8s/deployment.yaml
+      #     kubectl apply -f k8s/deployment.yaml -n app
+      #     kubectl rollout status deployment/app-ts -n app
