@@ -1,56 +1,56 @@
-apiVersion: apps/v1
-kind: StatefulSet
+# apiVersion: apps/v1
+# kind: StatefulSet
 
-metadata:
-  name: postgres
+# metadata:
+#   name: postgres
 
-spec:
-  selector:
-    matchLabels:
-      app: postgres
-    replica: 2
-    template:
-      metadata:
-        labels:
-          app: postgres
-      spec:
-        containers:
-        - name: postgres
-          image: postgres:latest
-          env:
-          - name: POSTGRES_USER
-            value: postgres
-          - name: POSTGRES_PASSWORD
-            value: ++rocketseat++
-          - name: PGDATA
-            value: /var/lib/postgresql/data
-          ports:
-            - containerPort: 5432
-          volumeMounts:
-          - name: pg-data
-            mountPath: /var/lib/postgresql/data
-            subPath: data
-    volumeClaimTemplates:
-      - metadata:
-          name: pg-data
-        spec:
-          storageClassName: gp2
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 1Gi
----
-apiVersion: v1
-kind: Service
+# spec:
+#   selector:
+#     matchLabels:
+#       app: postgres
+#     replica: 2
+#     template:
+#       metadata:
+#         labels:
+#           app: postgres
+#       spec:
+#         containers:
+#         - name: postgres
+#           image: postgres:latest
+#           env:
+#           - name: POSTGRES_USER
+#             value: postgres
+#           - name: POSTGRES_PASSWORD
+#             value: ++rocketseat++
+#           - name: PGDATA
+#             value: /var/lib/postgresql/data
+#           ports:
+#             - containerPort: 5432
+#           volumeMounts:
+#           - name: pg-data
+#             mountPath: /var/lib/postgresql/data
+#             subPath: data
+#     volumeClaimTemplates:
+#       - metadata:
+#           name: pg-data
+#         spec:
+#           storageClassName: gp2
+#           accessModes:
+#             - ReadWriteOnce
+#           resources:
+#             requests:
+#               storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: Service
  
-metadata:
-  name: postgres-svc
+# metadata:
+#   name: postgres-svc
 
-spec:
-  ClusterIP: None
-  selector:
-    app: postgres
-  ports:
-    - port: 5432
-      targetPort: 5432
+# spec:
+#   ClusterIP: None
+#   selector:
+#     app: postgres
+#   ports:
+#     - port: 5432
+#       targetPort: 5432

@@ -1,42 +1,42 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: pg-cluster-secret
-type: kubernetes.io/basic-auth
-data:
-  username: cm9ja2V0c2VhdA==
-  password: Kytyb2NrZXRzZWF0Kys=
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: pg-cluster-secret
+# type: kubernetes.io/basic-auth
+# data:
+#   username: cm9ja2V0c2VhdA==
+#   password: Kytyb2NrZXRzZWF0Kys=
 
----
-apiVersion: postgresql.cnpg.io/v1
-kind: Cluster
+# ---
+# apiVersion: postgresql.cnpg.io/v1
+# kind: Cluster
 
-metadata:
-  name: pg-cluster
+# metadata:
+#   name: pg-cluster
 
-spec:
-  instances: 2
-  bootstrap:
-    initdb:
-      database: rocketseat
-      owner: rocketseat
-      secret:
-        name: pg-cluster-secret
-  storage:
-    storageClass: standard
-    size: 1Gi
-  enableSuperuserAccess: true
+# spec:
+#   instances: 2
+#   bootstrap:
+#     initdb:
+#       database: rocketseat
+#       owner: rocketseat
+#       secret:
+#         name: pg-cluster-secret
+#   storage:
+#     storageClass: standard
+#     size: 1Gi
+#   enableSuperuserAccess: true
 
----
-apiVersion: postgresql.cnpg.io/v1
-kind: ScheduledBackup
+# ---
+# apiVersion: postgresql.cnpg.io/v1
+# kind: ScheduledBackup
 
-metadata:
-  name: pg-cluster-backup
+# metadata:
+#   name: pg-cluster-backup
 
-spec:
-  schedule: "0 0 5 * * *"
-  backupOwnerReference: self
-  cluster:
-    name: pg-cluster
-  method: barmanObjectStore
+# spec:
+#   schedule: "0 0 5 * * *"
+#   backupOwnerReference: self
+#   cluster:
+#     name: pg-cluster
+#   method: barmanObjectStore
