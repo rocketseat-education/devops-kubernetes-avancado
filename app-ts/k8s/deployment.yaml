@@ -28,34 +28,34 @@ spec:
         #runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node.kubernetes.io/instance-type
-                    operator: In
-                    values: [ "m5.large"]
-                  - key: node.kubernetes.io/capacity-type
-                    operator: In
-                    values: [ "on-demand"]
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: node.kubernetes.io/instance-type
+      #               operator: In
+      #               values: [ "m5.large"]
+      #             - key: node.kubernetes.io/capacity-type
+      #               operator: In
+      #               values: [ "on-demand"]
         # podAntiAffinity:
         #   requiredDuringSchedulingIgnoredDuringExecution:
         #     - labelSelector:
         #         matchLabels:
         #           api: app-ts
         #       topologyKey: kubernetes.io/hostname
-      topologySpreadConstraints:
-        - labalSelector:
-            matchLabels:
-              api: app-ts
-          maxSkew: 1
-          topologyKey: topology.kubernetes.io/zone
-          whenUnsatisfiable: DoNotSchedule
+      # topologySpreadConstraints:
+      #   - labalSelector:
+      #       matchLabels:
+      #         api: app-ts
+      #     maxSkew: 1
+      #     topologyKey: topology.kubernetes.io/zone
+      #     whenUnsatisfiable: DoNotSchedule
       #serviceAccountName: sa-default
       containers:
         - name: app-ts
-          image: danielrodriguess/app-ts:4e033dd
+          image: danielrodriguess/app-ts:f10cf00
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
@@ -110,9 +110,9 @@ spec:
             requests:
               cpu: 100m
               memory: 128Mi
-            # limits:
-            #   cpu: 300m
-            #   memory: 256Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi
           # volumeMounts:
           #   - name: app-ts-data
           #     mountPath: /usr/src/app/uploads
