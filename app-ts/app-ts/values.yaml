@@ -2,12 +2,16 @@ replicaCount: 3
 
 namespace: app
 
-restartPod: true
+restartPodWithConfig: true
 
 appConfigEnv:
   APP: rocketseat-app
   ENV: production
   DB_URL: postgresql://xpto
+  DB_NAME: rocketseat
+
+appSecretEnv:
+  API_KEY: YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODk=
 
 image:
   repository: danielrodriguess/app-ts
