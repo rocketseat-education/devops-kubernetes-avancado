@@ -1,14 +1,34 @@
-replicaCount: 1
+replicaCount: 3
 
 image:
-  repository: nginx
+  repository: danielrodriguess/app-ts
   pullPolicy: IfNotPresent
-  tag: ""
+  containerPort: 3000
+  tag: "0ce1cc2"
 
 nameOverride: ""
 fullnameOverride: ""
 
-securityContext: {}
+serviceAccount:
+  create: false
+
+ingress:
+  enabled: false
+
+httpRoute:
+  enabled: false
+
+podSecurityContext:
+  runAsUser: 1000
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
 
 service:
   type: ClusterIP
@@ -16,20 +36,40 @@ service:
 
 resources:
   limits:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 300m
+    memory: 256Mi
   requests:
     cpu: 100m
     memory: 128Mi
 
 livenessProbe:
   httpGet:
-    path: /
-    port: http
+    path: /healthz
+    port: 3000
+  failureThreshold: 2
+  successThreshold: 3
+  periodSeconds: 10
+  initialDelaySeconds: 5
+
 readinessProbe:
   httpGet:
-    path: /
-    port: http
+    path: /readyz
+    port: 3000
+  failureThreshold: 3
+  successThreshold: 1
+  timeoutSeconds: 1
+  periodSeconds: 15
+  initialDelaySeconds: 5
+
+startupProbe:
+  httpGet:
+    path: /healthz
+    port: 3000
+  failureThreshold: 3
+  successThreshold: 1
+  timeoutSeconds: 1
+  periodSeconds: 10
+  initialDelaySeconds: 10
 
 autoscaling:
   enabled: false
