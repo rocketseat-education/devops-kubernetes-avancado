@@ -89,3 +89,20 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
+
+deploymentStrategy:
+  strategy:
+    #blueGreen:
+    #  activeService: app-ts-release
+    #  previewService: app-ts-release-preview
+    #  autoPromotionEnabled: false
+    canary:
+      steps:
+        - setWeight: 10
+        - pause: {}
+        - setWeight: 24
+        - pause: { duration: 40s }
+        - setWeight: 50
+        - pause: { duration: 40s }
+        - setWeight: 90
+        - pause: {}
