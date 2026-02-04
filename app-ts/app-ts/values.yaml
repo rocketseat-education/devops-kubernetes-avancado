@@ -1,4 +1,4 @@
-replicaCount: 3
+replicaCount: 10
 
 namespace: app
 
@@ -17,7 +17,7 @@ image:
   repository: danielrodriguess/app-ts
   pullPolicy: IfNotPresent
   containerPort: 3000
-  tag: "0ce1cc2"
+  tag: "4e033dd"
 
 nameOverride: ""
 fullnameOverride: ""

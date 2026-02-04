@@ -12,10 +12,20 @@ spec:
     matchLabels:
       {{- include "app-ts.selectorLabels" . | nindent 6 }}
   strategy:
-    blueGreen:
-      activeService: {{ include "app-ts.fullname" . }}
-      previewService: {{ include "app-ts.fullname" . }}-preview
-      autoPromotionEnabled: false
+    # blueGreen:
+    #   activeService: {{ include "app-ts.fullname" . }}
+    #   previewService: {{ include "app-ts.fullname" . }}-preview
+    #   autoPromotionEnabled: false
+    canary:
+      steps :
+        - setWeight: 10
+        - pause: {}
+        - setWeight: 24
+        - pause: { duration: 40s }
+        - setWeight: 50
+        - pause: { duration: 40s }
+        - setWeight: 90
+        - pause: {}
   template:
     metadata:
       {{- if .Values.restartPodWithConfig }}
