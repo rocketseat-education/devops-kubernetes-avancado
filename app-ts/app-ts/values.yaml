@@ -1,6 +1,6 @@
 replicaCount: 3
 
-namespace: app2
+namespace: app
 
 restartPodWithConfig: true
 
