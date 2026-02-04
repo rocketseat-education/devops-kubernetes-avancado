@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: {{ include "app-ts.fullname" . }}
   labels:
@@ -11,6 +11,11 @@ spec:
   selector:
     matchLabels:
       {{- include "app-ts.selectorLabels" . | nindent 6 }}
+  strategy:
+    blueGreen:
+      activeService: {{ include "app-ts.fullname" . }}
+      previewService: {{ include "app-ts.fullname" . }}-preview
+      autoPromotionEnabled: false
   template:
     metadata:
       {{- if .Values.restartPodWithConfig }}
