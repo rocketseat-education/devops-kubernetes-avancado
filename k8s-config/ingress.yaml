@@ -5,13 +5,15 @@ metadata:
   name: app-ts-ingress
   namespace: app
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: app-ts.eusoudaniel.xyz
+    external-dns.alpha.kubernetes.io/hostname: app.eusoudaniel.xyz
     cert-manager.io/cluster-issuer: cert-issuer-prod
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    #nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 
 spec:
-  # ingressClassName: nginx
+  ingressClassName: nginx
   rules:
-  - host: app-ts.eusoudaniel.xyz
+  - host: app.eusoudaniel.xyz
     http:
       paths:
       - path: /
@@ -23,5 +25,5 @@ spec:
               number: 80
   tls:
   - hosts:
-    - app-ts.eusoudaniel.xyz
+    - app.eusoudaniel.xyz
     secretName: app-ts-tls-secret
