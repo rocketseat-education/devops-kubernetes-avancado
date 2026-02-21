@@ -16,8 +16,8 @@ spec:
   - host: app.eusoudaniel.xyz
     http:
       paths:
-      - path: /
-        pathType: Prefix
+      - path: /example-k8s
+        pathType: Exact
         backend:
           service:
             name: app-ts-svc
