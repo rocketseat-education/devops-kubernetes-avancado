@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: app-ts-ingress
+  namespace: app
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: app-ts.eusoudaniel.xyz
+    cert-manager.io/cluster-issuer: cert-issuer-prod
+
+spec:
+  # ingressClassName: nginx
+  rules:
+  - host: app-ts.eusoudaniel.xyz
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app-ts-svc
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - app-ts.eusoudaniel.xyz
+    secretName: app-ts-tls-secret
