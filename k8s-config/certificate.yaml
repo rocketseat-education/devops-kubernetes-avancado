@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+
+metadata:
+  name: app-cert
+  namespace: app
+
+spec:
+  secretName: app-tls-secret
+  issuerRef:
+    Kind: ClusterIssuer
+    name: cert-issuer-prod
+  dnsNames:
+    - "app-ts.eusoudaniel.xyz"
