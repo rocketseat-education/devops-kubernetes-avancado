@@ -1,4 +1,14 @@
 apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+
+metadata:
+  name: envoy
+
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+
+---
+apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 
 metadata:
@@ -6,12 +16,15 @@ metadata:
   namespace: infra
 
 spec:
-  gatewayClassName: nginx
+  gatewayClassName: envoy
   listeners:
-  - name: http
-    protocol: HTTP
-    port: 80
-    hostname: "*.eusouodaniel.xyz"
+    - name: http
+      protocol: HTTP
+      port: 80
+      hostname: "*.eusouodaniel.xyz"
+      allowedRoutes:
+        namespaces:
+          from: All
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -23,10 +36,11 @@ metadata:
 
 spec:
   parentRefs:
-  - name: main-gateway
-    namespace: infra
+    - name: main-gateway
+      namespace: infra
+      sectionName: http
   hostnames:
-  - "app-ts.eusouodaniel.xyz"
+    - "app-ts.eusouodaniel.xyz"
   rules:
   - matches:
     - path:
