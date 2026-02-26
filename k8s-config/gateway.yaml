@@ -14,6 +14,8 @@ kind: Gateway
 metadata:
   name: main-gateway
   namespace: infra
+  annotations:
+    cert-manager.io/cluster-issuer: cert-issuer-prod
 
 spec:
   gatewayClassName: envoy
@@ -25,6 +27,17 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.eusouodaniel.xyz"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: wildcard-eusoudaniel-domain-tls
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -40,7 +53,7 @@ spec:
   parentRefs:
     - name: main-gateway
       namespace: infra
-      sectionName: http
+      sectionName: https
   hostnames:
     - "app-ts.eusouodaniel.xyz"
   rules:
