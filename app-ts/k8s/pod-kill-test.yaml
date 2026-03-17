@@ -1,0 +1,20 @@
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: app
+  name: pod-kill-app-ts
+
+spec:
+  schedule: 23 19 * * *
+  startingDeadlineSeconds: 10
+  concurrencyPolicy: Forbid
+  historyLimit: 5
+  type: PodChaos
+  podChaos:
+    selector:
+      namespaces:
+      - app
+      labelSelectors:
+        api: app-ts
+    mode: all
+    action: pod-kill
