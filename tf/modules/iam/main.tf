@@ -68,7 +68,6 @@ resource "aws_iam_role_policy_attachment" "eks_ebs_csi_policy" {
 }
 
 resource "aws_iam_role" "karpenter_cluster_role_rocketseat_cluster" {
-  path        = "/"
   name        = "karpenter-cluster-role-rocketseat-cluster"
   description = "Role do cluster Karpenter."
   assume_role_policy = jsondecode(
@@ -78,7 +77,7 @@ resource "aws_iam_role" "karpenter_cluster_role_rocketseat_cluster" {
         {
           "Effect" : "Allow",
           "Principal" : {
-            "Federated" : "arn:aws:iam::403429280851:oidc-provider/${replace(var.oidc_provider, "https://", "")}"
+            "Federated" : "arn:aws:iam::${var.account_id}:oidc-provider/${replace(var.oidc_provider, "https://", "")}"
           },
           "Action" : "sts:AssumeRoleWithWebIdentity",
           "Condition" : {
@@ -92,6 +91,97 @@ resource "aws_iam_role" "karpenter_cluster_role_rocketseat_cluster" {
     }
   )
   max_session_duration = 3600
+  tags = {
+    IAC = "True"
+  }
+}
+
+resource "aws_iam_role" "karpenter_node_role_rocketseat_cluster" {
+  name        = "karpenter-node-role-rocketseat-cluster"
+  description = "Role criada para os nos que serao gerenciados pelo Karpenter"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  max_session_duration = 3600
+
+  tags = {
+    IAC = "True"
+  }
+}
+
+resource "aws_iam_policy" "external_dns_policy" {
+  name        = "ExternalDNSPolicy"
+  description = "Politica de acesso ao ExternalDNS"
+  policy = jsondecode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "route53:ChangeResourceRecordSets"
+        ],
+        "Resource" : [
+          "arn:aws:route53:::hostedzone/*"
+        ]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "route53:ListHostedZones",
+          "route53:ListResourceRecordSets",
+          "route53:ListTagsForResource",
+          "route53:GetChange"
+        ],
+        "Resource" : [
+          "*"
+        ]
+      }
+    ]
+  })
+  tags = {
+    IAC = "True"
+  }
+}
+
+resource "aws_iam_policy" "karpenter_interruption_policy" {
+  name        = "karpenter-interruption-policy"
+  description = "Politica de acesso ao SQS."
+  policy = jsondecode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes",
+          "sqs:GetQueueUrl"
+        ],
+        "Resource" : "arn:aws:sqs:${var.region}:${var.account_id}:${var.cluster_name}-karpenter-interruption"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "events:PutRule",
+          "events:PutTargets",
+          "events:DeleteRule",
+          "events:RemoveTargets",
+          "events:DescribeRule"
+        ],
+        "Resource" : "*"
+      }
+    ]
+  })
   tags = {
     IAC = "True"
   }
