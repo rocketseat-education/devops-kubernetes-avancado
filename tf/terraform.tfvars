@@ -8,3 +8,4 @@ desired_capacity   = 2
 max_capacity       = 2
 min_capacity       = 2
 kubernetes_version = "1.33"
+account_id         = "403429280851"

@@ -78,13 +78,13 @@ resource "aws_iam_role" "karpenter_cluster_role_rocketseat_cluster" {
         {
           "Effect" : "Allow",
           "Principal" : {
-            "Federated" : "arn:aws:iam::403429280851:oidc-provider/oidc.eks.us-east-2.amazonaws.com/id/E91BF7D91336C814A0E2CBC5488FF48D"
+            "Federated" : "arn:aws:iam::403429280851:oidc-provider/${replace(var.oidc_provider, "https://", "")}"
           },
           "Action" : "sts:AssumeRoleWithWebIdentity",
           "Condition" : {
             "StringEquals" : {
-              "oidc.eks.us-east-2.amazonaws.com/id/E91BF7D91336C814A0E2CBC5488FF48D:aud" : "sts.amazonaws.com",
-              "oidc.eks.us-east-2.amazonaws.com/id/E91BF7D91336C814A0E2CBC5488FF48D:sub" : "system:serviceaccount:kube-system:karpenter"
+              "${replace(var.oidc_provider, "https://", "")}:aud" : "sts.amazonaws.com",
+              "${replace(var.oidc_provider, "https://", "")}:sub" : "system:serviceaccount:kube-system:karpenter"
             }
           }
         }
