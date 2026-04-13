@@ -64,3 +64,18 @@ import {
   to = module.iam.aws_iam_role.karpenter_cluster_role_rocketseat_cluster
   id = "karpenter-cluster-role-rocketseat-cluster"
 }
+
+import {
+  to = module.iam.aws_iam_role.karpenter_node_role_rocketseat_cluster
+  id = "karpenter-node-role-rocketseat-cluster"
+}
+
+import {
+  to = module.iam.aws_iam_policy.external_dns_policy
+  id = "arn:aws:iam::403429280851:policy/ExternalDNSPolicy"
+}
+
+import {
+  to = module.iam.aws_iam_policy.karpenter_interruption_policy
+  id = "arn:aws:iam::403429280851:policy/karpenter-interruption-policy"
+}
