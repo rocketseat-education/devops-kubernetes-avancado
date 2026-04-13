@@ -24,7 +24,10 @@ module "vpc" {
 module "iam" {
   source = "./modules/iam"
 
-  cluster_name = var.cluster_name
+  cluster_name  = var.cluster_name
+  oidc_provider = module.eks.oidc_provider
+  region        = var.region
+  account_id    = var.account_id
 }
 
 module "sg" {
@@ -55,4 +58,9 @@ module "sqs-eventbridge-karpenter" {
   source = "./modules/sqs-eventbridge-karpenter"
 
   cluster_name = var.cluster_name
+}
+
+import {
+  to = module.iam.aws_iam_role.karpenter_cluster_role_rocketseat_cluster
+  id = "karpenter-cluster-role-rocketseat-cluster"
 }

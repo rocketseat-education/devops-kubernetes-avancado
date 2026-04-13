@@ -3,6 +3,11 @@ variable "cluster_name" {
   default = "rocketseat-eks"
 }
 
+variable "account_id" {
+  type    = string
+  default = "403429280851"
+}
+
 variable "vpc_name" {
   type    = string
   default = "rocketseat"
