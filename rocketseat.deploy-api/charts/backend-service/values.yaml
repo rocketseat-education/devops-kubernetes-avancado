@@ -1,0 +1,19 @@
+app: example-api
+environment: dev
+replicaCount: 1
+containerPort: 3000
+image:
+  repository: nginx
+  tag: latest
+
+env: {}
+
+resources: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+probes:
+  enabled: true
+  path: /health
