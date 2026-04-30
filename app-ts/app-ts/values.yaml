@@ -106,3 +106,14 @@ deploymentStrategy:
         - pause: { duration: 40s }
         - setWeight: 90
         - pause: {}
+
+chaosTesting:
+  enabled: true
+  podKill:
+    schedule: "23 19 * * *"
+    startingDeadlineSeconds: 10
+    concurrencyPolicy: Forbid
+    historyLimit: 5
+    type: PodChaos
+    mode: all
+    action: pod-kill

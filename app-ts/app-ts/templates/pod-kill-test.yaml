@@ -1,0 +1,24 @@
+{{- if .Values.chaosTesting.enabled -}}
+kind: Scheduled
+apiVersion: chaos-mesh.org/v1alpha1
+
+metadata:
+  name: {{ include "app-ts.fullname" . }}
+  labels:
+    {{- include "app-ts.labels" . | nindent 4 }}
+
+spec:
+  schedule: {{ .Values.chaosTesting.podKill.schedule }}
+  startingDeadlineSeconds: {{ .Values.chaosTesting.podKill.startingDeadlineSeconds }}
+  concurrencyPolicy: {{ .Values.chaosTesting.podKill.concurrencyPolicy }}
+  historyLimit: {{ .Values.chaosTesting.podKill.historyLimit }}
+  type: {{ .Values.chaosTesting.podKill.type }}
+  podChaos:
+    selector:
+      namespaces:
+        {{ .Values.namespace }}
+      labelSelectors:
+        {{- include "app-ts.selectorLabels" . | nindent 8 }}
+    mode: {{ .Values.chaosTesting.podKill.mode }}
+    action: {{ .Value.chaosTesting.podKill.action }}
+{{- end }}
