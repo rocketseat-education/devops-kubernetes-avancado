@@ -1,0 +1,28 @@
+{
+    "chart": "backend-service",
+    "app": "nginx",
+    "environment": "dev",
+    "replicaCount": "2",
+    "containerPort": "80",
+    "image": {
+        "repository": "nginx",
+        "tag": "latest"
+    },
+    "env": {
+        "ENV": "dev",
+        "teste": "true"
+    },
+    "resources": {
+        "requests": {
+            "cpu": "100m",
+            "memory": "128Mi"
+        },
+        "limits": {
+            "cpu": "100m",
+            "memory": "128Mi"
+        }
+    },
+    "probes": {
+        "enabled": false
+    }
+}
