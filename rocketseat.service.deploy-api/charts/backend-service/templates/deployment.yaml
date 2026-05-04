@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ .Values.app }}
+  labels:
+    app: {{ .Values.app }}
+    environment: {{ .Values.environment }}
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app }}
+        environment: {{ .Values.environment }}
+    spec:
+      containers:
+        - name: {{ .Values.app }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- if .Values.resources }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.probes.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.probes.path }}
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.probes.path }}
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          {{- end }}
