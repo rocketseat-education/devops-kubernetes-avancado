@@ -2,6 +2,7 @@ app: example-api
 environment: dev
 replicaCount: 1
 containerPort: 3000
+
 image:
   repository: nginx
   tag: latest
@@ -15,5 +16,5 @@ service:
   port: 80
 
 probes:
-  enabled: true
+  enabled: false
   path: /health
