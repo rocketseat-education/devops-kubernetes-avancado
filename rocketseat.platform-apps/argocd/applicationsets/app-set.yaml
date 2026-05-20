@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: platform-apps
+  namespace: argocd
+
+spec:
+  generators:
+      - git:
+          repoURL: git@github.com:eusouodaniel/rocketseat.platform-apps.git
+          revision: main
+          files:
+            - path: apps/*/*.yaml
+  template:
+    metadata:
+      name: '{{app}}-{{environment}}'
+      labels:
+        environment: '{{environment}}'
+        team: '{{team}}'
+    spec:
+      project: platform
+      sources:
+        - repoURL: '{{charts.url}}'
+          targetRevision: '{{charts.revision}}'
+          path: '{{charts.path}}'
+          helm:
+            valueFiles:
+              - '$values/apps/{{environment}}/{{app}}.values.yaml'
+              - values-{{environment}}.yaml
+
+        - repoURL: git@github.com:eusouodaniel/rocketseat.platform-apps.git
+          targetRevision: main
+          ref: values
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{team}}'
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+
