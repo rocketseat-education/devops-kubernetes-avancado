@@ -1,18 +1,18 @@
-FROM node:20.17.0 AS build
+FROM node:25-alpine3.22 AS build
 
 WORKDIR /usr/src/app
 
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn ./.yarn
 
-RUN yarn
+RUN yarn config set enableStrictSsl false && yarn
 
 COPY . .
 
 RUN yarn run build
 RUN yarn workspaces focus --production && yarn cache clean
 
-FROM node:20.17.0-alpine3.20
+FROM node:25-alpine3.22
 
 WORKDIR /usr/src/app
 
