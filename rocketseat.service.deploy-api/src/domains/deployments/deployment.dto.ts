@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsNumberString,
   IsObject,
   IsOptional,
   IsString,
@@ -28,6 +29,39 @@ export class ImageDto {
   tag!: string;
 }
 
+export class ChartDto {
+  @IsString()
+  @IsNotEmpty()
+  url!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  revision!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  path!: string;
+}
+
+export class ServiceDto {
+  @IsString()
+  @IsNotEmpty()
+  type!: string;
+
+  @IsInt()
+  @IsNotEmpty()
+  port!: number;
+}
+
+export class ProbeDto {
+  @IsBoolean()
+  @IsNotEmpty()
+  enabled!: boolean;
+
+  @IsString()
+  @IsOptional()
+  path!: string;
+}
 export class ResourcesDto {
   @IsOptional()
   @IsString()
@@ -48,7 +82,11 @@ export class DeployRequestDto {
 
   @IsString()
   @IsNotEmpty()
-  chart!: string;
+  team!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  charts!: ChartDto;
 
   @ValidateNested()
   @Type(() => ImageDto)
@@ -73,6 +111,14 @@ export class DeployRequestDto {
   @ValidateNested()
   @Type(() => ResourcesDto)
   resources?: ResourcesDto;
+
+  @IsString()
+  @IsNotEmpty()
+  service!: ServiceDto;
+
+  @IsString()
+  @IsNotEmpty()
+  probes!: ProbesDto;
 
   @IsOptional()
   @IsObject()

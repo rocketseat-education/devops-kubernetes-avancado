@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DeployRequestDto, Environment } from './deployment.dto';
-import { HelmService } from '../helm/helm.service';
 import { GitService } from '../git/git.service';
 @Injectable()
 
 export class DeploymentsService {
   constructor(
-    private readonly helm: HelmService,
     private readonly git: GitService,
     private readonly config: ConfigService,
   ) {}
@@ -24,7 +22,10 @@ export class DeploymentsService {
       containerPort: dto.containerPort ?? 3000,
       env: dto.env ?? {},
       resources: dto.resources ?? {},
-      chart: dto.chart,
+      charts: dto.charts,
+      team: dto.team,
+      service: dto.service,
+      probes: dto.probes,
       ...(dto.extraValues ?? {}),
     };
     await this.git.commitDeployment(values);
