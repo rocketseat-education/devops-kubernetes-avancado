@@ -1,6 +1,0 @@
-apiVersion: v2
-name: backend-service
-version: 0.1.0
-description: A Helm generic chart for Kubernetes
-appVersion: "1.0.0"
-type: application

@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DeployRequestDto } from './deployment.dto';
+import { DeployRequestDto, Environment } from './deployment.dto';
 import { HelmService } from '../helm/helm.service';
-
+import { GitService } from '../git/git.service';
 @Injectable()
+
 export class DeploymentsService {
   constructor(
     private readonly helm: HelmService,
+    private readonly git: GitService,
     private readonly config: ConfigService,
   ) {}
 
@@ -22,24 +24,16 @@ export class DeploymentsService {
       containerPort: dto.containerPort ?? 3000,
       env: dto.env ?? {},
       resources: dto.resources ?? {},
+      chart: dto.chart,
       ...(dto.extraValues ?? {}),
     };
-
-    const helmResult = await this.helm.upgradeInstall({
-      releaseName,
-      chartName: dto.chart,
-      namespace,
-      values,
-      dryRun: dto.dryRun,
-    });
-
+    await this.git.commitDeployment(values);
     return {
       releaseName,
       namespace,
       chart: dto.chart,
       image: dto.image,
       dryRun: dto.dryRun ?? false,
-      helm: helmResult,
     };
   }
 
