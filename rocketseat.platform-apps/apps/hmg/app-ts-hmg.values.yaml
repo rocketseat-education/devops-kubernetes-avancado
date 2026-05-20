@@ -1,0 +1,28 @@
+app: app-ts-hmg
+environment: hmg
+team: payments
+replicaCount: 1
+containerPort: 3000
+
+charts:
+  url: git@github.com:eusouodaniel/rocketseat.helm-charts.git
+  revision: main
+  path: charts/backend-service
+
+image:
+  repository: nginx
+  tag: latest
+
+env: {}
+
+resources: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+probes:
+  enabled: false
+  path: /health
+
+

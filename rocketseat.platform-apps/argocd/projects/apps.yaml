@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+
+metadata:
+  name: platform
+  namespace: argocd
+
+spec:
+  description: Rocketseat Platform Apps
+  sourceRepos:
+      - git@github.com:eusouodaniel/rocketseat.platform-apps.git
+      - git@github.com:eusouodaniel/rocketseat.helm-charts.git
+  destinations:
+      - namespace: '*'
+        server: 'https://kubernetes.default.svc'
+  clusterResourceWhitelist:
+      - group: '*'
+        kind: '*'
+
