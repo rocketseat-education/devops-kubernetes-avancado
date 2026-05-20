@@ -79,6 +79,6 @@ export class GitService {
     }
 
     private getAppFilePath(environment: string, app: string) {
-        return `apps/${environment}/${app}.yaml`;
+        return `apps/${environment}/${app}.values.yaml`;
     }
 }
