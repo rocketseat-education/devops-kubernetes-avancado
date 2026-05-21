@@ -57,14 +57,11 @@ jobs:
           REQUEST_PAYLOAD=$(jq  \
             --arg environment "hmg" \
             --arg imageTag "${{ steps.generate_tag.outputs.sha }}" \
-            '. + {
-              "environment": $environment,
-              "image.tag": $imageTag
-              }' deploy.json)
-          echo "REQUEST_PAYLOAD: $REQUEST_PAYLOAD"
-          # curl -X POST "" \
-          # -H "Content-Type: application/json" \
-          # -d "$REQUEST_PAYLOAD"
+            'environment"=$environment | .image.tag: $imageTag' \
+            deploy.json)
+          curl -X POST "https://3clifl-ip-104-28-170-41.tunnelmole.net/deployments" \
+            -H "Content-Type: application/json" \
+            -d "$REQUEST_PAYLOAD"
       # - name: Update image tag
         # uses: fjogeleit/yaml-update-action@main
         # with:
