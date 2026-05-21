@@ -28,11 +28,14 @@ export class DeploymentsService {
       probes: dto.probes,
       ...(dto.extraValues ?? {}),
     };
+    if (values.environment === 'prod') {
+      return this.git.openDeploymentPullRequest(values);
+    }
     await this.git.commitDeployment(values);
     return {
       releaseName,
       namespace,
-      chart: dto.chart,
+      charts: dto.charts,
       image: dto.image,
       dryRun: dto.dryRun ?? false,
     };

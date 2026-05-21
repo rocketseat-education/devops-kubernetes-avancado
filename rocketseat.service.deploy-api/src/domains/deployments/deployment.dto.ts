@@ -14,9 +14,8 @@ import {
 } from 'class-validator';
 
 export enum Environment {
-  Dev = 'dev',
-  Staging = 'staging',
-  Production = 'production',
+  hmg = 'hmg',
+  prod = 'prod',
 }
 
 export class ImageDto {

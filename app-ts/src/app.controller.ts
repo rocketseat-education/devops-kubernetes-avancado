@@ -10,6 +10,11 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @Get('/test')
+  getTest(): string {
+    return 'Testei o deploy';
+  }
+
   @Get('/example-k8s')
   getExample(): string {
     return this.appService.getExample();
