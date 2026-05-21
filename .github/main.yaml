@@ -1,6 +1,16 @@
 name: CI
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'hmg'
+        type: choice
+        options:
+          - hmg
+          - prod
   push:
     branches:
       - main
@@ -13,7 +23,8 @@ jobs:
   build:
     name: 'Build, Push and Deployment'
     runs-on: ubuntu-latest
-
+    env:
+      ENVIRONMENT: ${{ github.event.inputs.environment || 'hmg' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,13 +63,13 @@ jobs:
           docker push ${{ vars.IMAGE_BASE_NAME }}:latest
 
 
-      - name: Deploy app
+      - name: Deploy app $ENVIRONMENT
         run: |
           REQUEST_PAYLOAD=$(jq  \
-            --arg environment "hmg" \
+            --arg environment "$ENVIRONMENT" \
             --arg imageTag "${{ steps.generate_tag.outputs.sha }}" \
             'environment"=$environment | .image.tag: $imageTag' \
-            deploy.json)
+            deploy.$ENVIRONMENT.json)
           curl -X POST "https://3clifl-ip-104-28-170-41.tunnelmole.net/deployments" \
             -H "Content-Type: application/json" \
             -d "$REQUEST_PAYLOAD"
