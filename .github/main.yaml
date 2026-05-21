@@ -21,7 +21,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 25
           cache: 'yarn'
 
       - name: Install dependencies
@@ -51,16 +51,30 @@ jobs:
           docker tag ${{ vars.IMAGE_BASE_NAME }}:${{ steps.generate_tag.outputs.sha }} ${{ vars.IMAGE_BASE_NAME }}:latest
           docker push ${{ vars.IMAGE_BASE_NAME }}:latest
 
-      - name: Update image tag
-        uses: fjogeleit/yaml-update-action@main
-        with:
+
+      - name: Deploy app
+        run: |
+          REQUEST_PAYLOAD=$(jq  \
+            --arg environment "hmg" \
+            --arg imageTag "${{ steps.generate_tag.outputs.sha }}" \
+            '. + {
+              "environment": $environment,
+              "image.tag": $imageTag
+              }' deploy.json)
+          echo "REQUEST_PAYLOAD: $REQUEST_PAYLOAD"
+          # curl -X POST "" \
+          # -H "Content-Type: application/json" \
+          # -d "$REQUEST_PAYLOAD"
+      # - name: Update image tag
+        # uses: fjogeleit/yaml-update-action@main
+        # with:
           # branch: 'deployment/${{ steps.generate_tag.outputs.sha }}'
-          branch: 'main'
-          valueFile: 'k8s/deployment.yaml'
-          propertyPath: 'spec.template.spec.containers[0].image'
-          value: 'danielrodriguess/app-ts:${{ steps.generate_tag.outputs.sha }}'
-          commitChange: true
-          message: 'new: update image tag'
+          # branch: 'main'
+          # valueFile: 'k8s/deployment.yaml'
+          # propertyPath: 'spec.template.spec.containers[0].image'
+          # value: 'danielrodriguess/app-ts:${{ steps.generate_tag.outputs.sha }}'
+          # commitChange: true
+          # message: 'new: update image tag'
           # createPR: true
           # targetBranch: main
 
