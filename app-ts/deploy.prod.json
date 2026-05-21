@@ -1,6 +1,6 @@
 {
     "app": "app-ts",
-    "environment": "hmg",
+    "environment": "prod",
     "team": "users",
     "charts": {
         "url": "git@github.com:eusouodaniel/rocketseat.heml-charts.git",
@@ -10,7 +10,7 @@
     "image": {
         "repository": "danielrodrigues/app-ts"
     },
-    "replicaCount": 10,
+    "replicaCount": 5,
     "containerPort": 3000,
     "env": {
         "NODE_ENV": "production",
