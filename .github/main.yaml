@@ -1,16 +1,16 @@
 name: CI
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'hmg'
-        type: choice
-        options:
-          - hmg
-          - prod
+#  workflow_dispatch:
+#    inputs:
+#      environment:
+#        description: 'Deployment environment'
+#        required: true
+#        default: 'hmg'
+#        type: choice
+#        options:
+#          - hmg
+#          - prod
   push:
     branches:
       - main
@@ -23,8 +23,8 @@ jobs:
   build:
     name: 'Build, Push and Deployment'
     runs-on: ubuntu-latest
-    env:
-      ENVIRONMENT: ${{ github.event.inputs.environment || 'hmg' }}
+  #  env:
+  #    ENVIRONMENT: ${{ github.event.inputs.environment || 'hmg' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,13 +63,34 @@ jobs:
           docker push ${{ vars.IMAGE_BASE_NAME }}:latest
 
 
-      - name: Deploy app $ENVIRONMENT
+      - name: Deploy app hmg
         run: |
           REQUEST_PAYLOAD=$(jq  \
-            --arg environment "$ENVIRONMENT" \
+            --arg environment "hmg" \
             --arg imageTag "${{ steps.generate_tag.outputs.sha }}" \
             'environment"=$environment | .image.tag: $imageTag' \
-            deploy.$ENVIRONMENT.json)
+            deploy.hmg.json)
+          curl -X POST "https://3clifl-ip-104-28-170-41.tunnelmole.net/deployments" \
+            -H "Content-Type: application/json" \
+            -d "$REQUEST_PAYLOAD"
+
+
+      - name: Approve PROD deployment
+        uses: trstringer/manual-approval@v1.12.0
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: eusouodaniel
+          minimum-approvals: 1
+          issue-title: "Deploying app-ts to prod from staging"
+          issue-body: "Please approve or deny the deployment of app-ts."
+
+      - name: Deploy app prod
+        run: |
+          REQUEST_PAYLOAD=$(jq  \
+            --arg environment "prod" \
+            --arg imageTag "${{ steps.generate_tag.outputs.sha }}" \
+            'environment"=$environment | .image.tag: $imageTag' \
+            deploy.prod.json)
           curl -X POST "https://3clifl-ip-104-28-170-41.tunnelmole.net/deployments" \
             -H "Content-Type: application/json" \
             -d "$REQUEST_PAYLOAD"
