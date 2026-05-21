@@ -4,7 +4,6 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
-  IsNumberString,
   IsObject,
   IsOptional,
   IsString,
@@ -61,14 +60,26 @@ export class ProbeDto {
   @IsOptional()
   path!: string;
 }
-export class ResourcesDto {
-  @IsOptional()
-  @IsString()
-  cpu?: string;
 
-  @IsOptional()
+export class BaseResourceDto {
+  @IsNotEmpty()
   @IsString()
-  memory?: string;
+  cpu: string;
+
+  @IsNotEmpty()
+  @IsString()
+  memory: string;
+}
+export class ResourcesDto {
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => BaseResourceDto)
+  requests: BaseResourceDto;
+
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => BaseResourceDto)
+  limits: BaseResourceDto;
 }
 
 export class DeployRequestDto {
@@ -106,10 +117,10 @@ export class DeployRequestDto {
   @IsObject()
   env?: Record<string, string>;
 
-  @IsOptional()
+  @IsNotEmpty()
   @ValidateNested()
   @Type(() => ResourcesDto)
-  resources?: ResourcesDto;
+  resources: ResourcesDto;
 
   @IsString()
   @IsNotEmpty()

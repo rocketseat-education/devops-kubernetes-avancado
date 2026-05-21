@@ -16,7 +16,16 @@
         "NODE_ENV": "production",
         "NODE_TLS_REJECT_UNAUTHORIZED": 0
     },
-    "resources": {},
+    "resources": {
+        "requests": {
+            "cpu": "200m",
+            "memory": "256Mi"
+        },
+        "limits": {
+            "cpu": "300m",
+            "memory": "256Mi"
+        }
+    },
     "service": {
         "type": "ClusterIP",
         "port": 80
