@@ -10,7 +10,7 @@
     "image": {
         "repository": "danielrodrigues/app-ts"
     },
-    "replicaCount": 5,
+    "replicaCount": 10,
     "containerPort": 3000,
     "env": {
         "NODE_ENV": "production",

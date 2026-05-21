@@ -1,0 +1,28 @@
+{
+    "app": "app-ts",
+    "environment": "hmg",
+    "team": "users",
+    "charts": {
+        "url": "git@github.com:eusouodaniel/rocketseat.heml-charts.git",
+        "revision": "main",
+        "path": "charts/backend-service"
+    },
+    "image": {
+        "repository": "danielrodrigues/app-ts"
+    },
+    "replicaCount": 10,
+    "containerPort": 3000,
+    "env": {
+        "NODE_ENV": "production",
+        "NODE_TLS_REJECT_UNAUTHORIZED": 0
+    },
+    "resources": {},
+    "service": {
+        "type": "ClusterIP",
+        "port": 80
+    },
+    "probes": {
+        "enabled": false,
+        "path": "/health"
+    }
+}
